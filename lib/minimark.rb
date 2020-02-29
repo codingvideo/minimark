@@ -13,8 +13,7 @@ module MiniMark
         @str = str.strip 
       end
 
-      if(heading?)     ;@line_type = :heading
-      elsif(section?)  ;@line_type = :section
+      if(section?)     ;@line_type = :section
       elsif(code?)     ;@line_type = :code
       elsif(codeopen?) ;@line_type = :codeopen
       elsif(codeclose?);@line_type = :codeclose
@@ -28,7 +27,6 @@ module MiniMark
       end
     end
 
-    def heading?  ;@str[0]=="#" && @str[1]!= "#" ;end
     def section?  ;@str[0]=="#" && @str[1]=="#" && @str[2]!="#" ;end
     def code?     ;@scope == :code && @str != '```' ;end
     def codeopen? ;@str.match(/^```.+/) != nil ;end
@@ -42,13 +40,7 @@ module MiniMark
 
     def to_s
 
-      if(:heading == @line_type)
-        str = @str.sub(/^#/, '').strip
-        str =  str.sub('[', '<span class="boxed">')
-        str =  str.sub(']', '</span>')
-        return '<h1>' + str + '</h1>'
-
-      elsif(:section == @line_type)
+      if(:section == @line_type)
         str = @str.sub(/^##/, '').strip
         return '<h2>' + str + '</h2>'
 
