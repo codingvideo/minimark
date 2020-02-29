@@ -28,6 +28,10 @@ module MiniMark
         @line_type = :blank
       elsif(html?)
         @line_type = :html
+      elsif(gonext?)
+        @line_type = :gonext
+      elsif(goback?)
+        @line_type = :goback
       else
         @line_type = :paragraph
       end
@@ -66,6 +70,14 @@ module MiniMark
       @str[0] == '<' && @str[-1] == '>'
     end
 
+    def gonext?
+      @str[0] == '-' && @str[1] == '>'
+    end
+
+    def goback?
+      @str[0] == '<' && @str[1] == '-'
+    end
+
     def to_s
       if(@line_type == :heading)
         str = @str.sub(/^#/, '').strip
@@ -91,6 +103,10 @@ module MiniMark
         return '<p class="hint">' + str + '</p>'
       elsif(@line_type == :html)
         return @str
+      elsif(@line_type == :gonext)
+        return go_link(@str, 'next')
+      elsif(@line_type == :goback)
+        return go_link(@str, 'back')
       elsif(@line_type == :paragraph)
         str = replace_brackets(/`/, 'mono')
         str = str.sub(/^\^\s/, '&uarr; ')
@@ -99,6 +115,17 @@ module MiniMark
       else # @line_type == :blank
         return ""
       end
+    end
+
+    def go_link(str, _class)
+      parts = str.split(/\(|\)/)
+      '<div class="go-box '+_class+'">' +
+        '<a class="go '+_class+'" href="'+parts[1].strip+'">' +
+          (_class=='back' ? '&larr; ' : '') +
+          parts[2].strip + 
+          (_class=='next' ? ' &rarr;' : '') +
+        '</a>' +
+      '</div>'
     end
 
     def replace_brackets(bracket, span_class)
