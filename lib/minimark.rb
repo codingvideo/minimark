@@ -73,7 +73,11 @@ module MiniMark
         return replace_brackets(/___/, 'light')
       elsif(@line_type == :codeopen)
         lang = @str.sub('```','').strip
-        return '<pre class="prettyprint lang-'+lang+'">'
+        if(lang=='cmd')
+          return '<pre class="cmd">'
+        else
+          return '<pre class="prettyprint lang-'+lang+'">'
+        end
       elsif(@line_type == :codeclose)
         return '</pre>'
       elsif(@line_type == :hint)
