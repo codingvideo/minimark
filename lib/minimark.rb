@@ -78,8 +78,16 @@ module MiniMark
           data_str = template_spec[1]
           data = eval('{' + data_str + '}')
           template = File.read(template_path)
+          # 1) swap binding with data
           data.keys.each do |k|
-            template = template.gsub(/\{\{\s*#{k.to_s}\s*\}\}/, data[k])
+            template = template.gsub(/\{\{\s*#{k.to_s}\s*(\|\|\s*.+\s*)*\}\}/, data[k])
+          end
+          # 2) for leftovers, use default value
+          bindings = template.scan(/\{\{.+\|\s*.+\s*\}\}/)
+          bindings.each do |b|
+            value_str = b.split(/\s*\|\|\s*/)[1].split(/\s*\}\}/)[0]
+            value = eval(value_str)
+            template = template.gsub(b, value)
           end
           return template
         else
