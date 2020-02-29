@@ -32,6 +32,8 @@ module MiniMark
         @line_type = :gonext
       elsif(goback?)
         @line_type = :goback
+      elsif(template?)
+        @line_type = :template
       else
         @line_type = :paragraph
       end
@@ -78,6 +80,10 @@ module MiniMark
       @str[0] == '<' && @str[1] == '-'
     end
 
+    def template?
+      @str[0] == '[' && @str[-1] == ']'
+    end
+
     def to_s
       if(@line_type == :heading)
         str = @str.sub(/^#/, '').strip
@@ -107,6 +113,9 @@ module MiniMark
         return go_link(@str, 'next')
       elsif(@line_type == :goback)
         return go_link(@str, 'back')
+      elsif(@line_type == :template)
+        template_path = @str.gsub(/\[|\]/, '').strip
+        return File.read(template_path)
       elsif(@line_type == :paragraph)
         str = replace_brackets(/`/, 'mono')
         str = str.sub(/^\^\s/, '&uarr; ')
