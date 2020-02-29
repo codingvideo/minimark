@@ -8,7 +8,7 @@ module MiniMark
       @scope = scope
 
       if(@scope == :code && Util.not_code_scope_close?(str))
-        @str = str.rstrip + ' ' # rstrip only, retain left space
+        @str = str.rstrip # rstrip only, retain left space
       else
         @str = str.strip 
       end
