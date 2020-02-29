@@ -85,6 +85,8 @@ module MiniMark
         return '<p class="hint">' + str + '</p>'
       elsif(@line_type == :paragraph)
         str = replace_brackets(/`/, 'mono')
+        str = str.sub(/^\^\s/, '&uarr; ')
+        str = str.sub(/^v\s/, '&darr; ')
         return '<p>' + str + '</p>'
       else # @line_type == :blank
         return ""
