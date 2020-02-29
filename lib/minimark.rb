@@ -26,13 +26,15 @@ module MiniMark
         @line_type = :hint
       elsif(blank?)
         @line_type = :blank
+      elsif(html?)
+        @line_type = :html
       else
         @line_type = :paragraph
       end
     end
 
     def heading?
-      @str[0]=="#" && @str[1]!="#"
+      @str[0]=="#" && @str[1]!= "#"
     end
 
     def section?      
@@ -60,6 +62,10 @@ module MiniMark
       @str == ''
     end
 
+    def html?
+      @str[0] == '<' && @str[-1] == '>'
+    end
+
     def to_s
       if(@line_type == :heading)
         str = @str.sub(/^#/, '').strip
@@ -83,6 +89,8 @@ module MiniMark
       elsif(@line_type == :hint)
         str = @str.sub(/^\|/, '').strip
         return '<p class="hint">' + str + '</p>'
+      elsif(@line_type == :html)
+        return @str
       elsif(@line_type == :paragraph)
         str = replace_brackets(/`/, 'mono')
         str = str.sub(/^\^\s/, '&uarr; ')
