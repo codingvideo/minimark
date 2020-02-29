@@ -22,6 +22,8 @@ module MiniMark
         @line_type = :codeopen
       elsif(codeclose?)
         @line_type = :codeclose
+      elsif(hint?)
+        @line_type = :hint
       elsif(blank?)
         @line_type = :blank
       else
@@ -50,6 +52,10 @@ module MiniMark
       @scope == :code && @str == '```'
     end
 
+    def hint?
+      @str[0] == '|'
+    end
+
     def blank?
       @str == ''
     end
@@ -70,6 +76,9 @@ module MiniMark
         return '<pre class="prettyprint lang-'+lang+'">'
       elsif(@line_type == :codeclose)
         return '</pre>'
+      elsif(@line_type == :hint)
+        str = @str.sub(/^\|/, '').strip
+        return '<p class="hint">' + str + '</p>'
       elsif(@line_type == :paragraph)
         str = replace_brackets(/`/, 'mono')
         return '<p>' + str + '</p>'
