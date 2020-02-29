@@ -72,24 +72,11 @@ module MiniMark
         return Util.go_link(@str, 'back')
 
       elsif(:template == @line_type)
-        template_spec = @str.gsub(/\[|\]/, '').strip.split('|')
+        template_spec = @str.gsub(/^\[|\]$/, '').strip.split('|', 2)
         template_path = template_spec[0].strip
+        data_str = template_spec[1] # for eval
         if(template_spec.size >= 2)
-          data_str = template_spec[1]
-          data = eval('{' + data_str + '}')
-          template = File.read(template_path)
-          # 1) swap binding with data
-          data.keys.each do |k|
-            template = template.gsub(/\{\{\s*#{k.to_s}\s*(\|\|\s*.+\s*)*\}\}/, data[k])
-          end
-          # 2) for leftovers, use default value
-          bindings = template.scan(/\{\{.+\|\s*.+\s*\}\}/)
-          bindings.each do |b|
-            value_str = b.split(/\s*\|\|\s*/)[1].split(/\s*\}\}/)[0]
-            value = eval(value_str)
-            template = template.gsub(b, value)
-          end
-          return template
+          return Util.render_template(template_path, data_str)
         else
           return File.read(template_path)
         end
@@ -107,6 +94,23 @@ module MiniMark
   end #class
 
   class Util
+
+    def self.render_template(template_path, data_str)
+      data = eval('{' + data_str + '}')
+      template = File.read(template_path)
+      # 1) swap binding with data
+      data.keys.each do |k|
+        template = template.gsub(/\{\{\s*#{k.to_s}\s*(\|\|\s*.+\s*)*\}\}/, data[k])
+      end
+      # 2) for leftovers, use default value
+      bindings = template.scan(/\{\{.+\|\s*.+\s*\}\}/)
+      bindings.each do |b|
+        value_str = b.split(/\s*\|\|\s*/)[1].split(/\s*\}\}/)[0]
+        value = eval(value_str)
+        template = template.gsub(b, value)
+      end
+      return template
+    end
 
     def self.not_code_scope_close?(str)
       str.strip != '```'
