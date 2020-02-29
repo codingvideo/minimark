@@ -4,7 +4,6 @@ module MiniMark
     attr :line_type
 
     def initialize(str, scope=nil)
-      # puts(scope)
       @scope = scope
 
       if @scope == :code  && str.strip != '```'
@@ -34,8 +33,8 @@ module MiniMark
       @str[0]=="#" && @str[1]!="#"
     end
 
-    def section?
-      @str[0]=="#" && @str[1]=="#" && @str[1]!="#"
+    def section?      
+      @str[0]=="#" && @str[1]=="#" && @str[2]!="#"
     end
 
     def code?
