@@ -80,8 +80,19 @@ module MiniMark
         return Util.go_link(@str, 'back')
 
       elsif(:template == @line_type)
-        template_path = @str.gsub(/\[|\]/, '').strip
-        return File.read(template_path)
+        template_spec = @str.gsub(/\[|\]/, '').strip.split('|')
+        template_path = template_spec[0].strip
+        if(template_spec.size >= 2)
+          data_str = template_spec[1]
+          data = eval('{' + data_str + '}')
+          template = File.read(template_path)
+          data.keys.each do |k|
+            template = template.gsub(/\{\{\s*#{k.to_s}\s*\}\}/, data[k])
+          end
+          return template
+        else
+          return File.read(template_path)
+        end
 
       elsif(:blank == @line_type)
         return ""
@@ -144,7 +155,7 @@ module MiniMark
     end
 
     def parse
-      
+
       return @out.join("\n") if(@out != nil) # caching
       
       file = File.open(@filename)
