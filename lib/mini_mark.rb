@@ -3,9 +3,9 @@ require_relative './custom_blog_line'
 module MiniMark
 
   class Parser
-    def initialize(filename, _CustomLine)
+    def initialize(filename, _Line=Line)
       @filename = filename
-      @_CustomLine = _CustomLine
+      @_Line = _Line
       @out = nil
     end
 
@@ -19,7 +19,7 @@ module MiniMark
       @out = []
       scope = nil
       lines.each do |l|
-        line = @_CustomLine.new(l, scope)
+        line = @_Line.new(l, scope)
         @out << line 
         if line.line_type == :codeopen
           scope = :code
