@@ -1,6 +1,9 @@
+require_relative './line'
+require_relative './util'
+
 module MiniMark
 
-  class CustomBlogLine < Line
+  class CustomBlogLine < MiniMark::Line
     
     def line_types
       [ :hint, :gonext, :goback, :section ]
@@ -17,11 +20,11 @@ module MiniMark
     end
 
     def gonext_to_s
-      Util.go_link(@str, 'next')
+      MiniMark::Util.go_link(@str, 'next')
     end
 
     def goback_to_s
-      Util.go_link(@str, 'back')
+      MiniMark::Util.go_link(@str, 'back')
     end
 
     def section_to_s

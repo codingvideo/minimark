@@ -1,9 +1,11 @@
+require_relative './util'
+
 module MiniMark
 
   module Renderable
 
     def code_to_s
-      return Util.replace_brackets(@str, /___/, 'light')
+      return MiniMark::Util.replace_brackets(@str, /___/, 'light')
     end
 
     def codeopen_to_s
@@ -28,7 +30,7 @@ module MiniMark
       template_path = template_spec[0].strip
       data_str = template_spec[1] # for eval
       if(template_spec.size >= 2)
-        return Util.render_template(template_path, data_str)
+        return MiniMark::Util.render_template(template_path, data_str)
       else
         return File.read(template_path)
       end
@@ -39,7 +41,7 @@ module MiniMark
     end
 
     def paragraph_to_s
-      str = Util.replace_brackets(@str, /`/, 'mono')
+      str = MiniMark::Util.replace_brackets(@str, /`/, 'mono')
       str = str.sub(/^\^\s/, '&uarr; ')
       str = str.sub(/^v\s/, '&darr; ')
       return '<p>' + str + '</p>'
