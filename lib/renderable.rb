@@ -24,21 +24,8 @@ module MiniMark
       return '</pre>'
     end
 
-    def hint_to_s
-      str = @str.sub(/^\|/, '').strip
-      return '<p class="hint">' + str + '</p>'
-    end
-
     def html_to_s
       return @str
-    end
-
-    def gonext_to_s
-      Util.go_link(@str, 'next')
-    end
-
-    def goback_to_s
-      Util.go_link(@str, 'back')
     end
 
     def template_to_s

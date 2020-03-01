@@ -18,17 +18,30 @@ module MiniMark
         @str = str.strip 
       end
 
-         if(section?)  ;@line_type = :section
+      custom_type = custom?
+
+      if(custom_type)  ;@line_type = custom_type
+      elsif(section?)  ;@line_type = :section
       elsif(code?)     ;@line_type = :code
       elsif(codeopen?) ;@line_type = :codeopen
       elsif(codeclose?);@line_type = :codeclose
-      elsif(hint?)     ;@line_type = :hint
       elsif(blank?)    ;@line_type = :blank
       elsif(html?)     ;@line_type = :html
-      elsif(gonext?)   ;@line_type = :gonext
-      elsif(goback?)   ;@line_type = :goback
       elsif(template?) ;@line_type = :template
       else             ;@line_type = :paragraph
+      end
+    end
+
+    def custom?
+      if defined?(line_types) != nil
+        self.line_types.each do |t|
+          if send(t.to_s + '?') == true
+            return t # line type is found
+          end
+        end
+        return nil
+      else
+        return nil
       end
     end
 
@@ -36,18 +49,39 @@ module MiniMark
     def code?     ;@scope == :code && @str != '```' ;end
     def codeopen? ;@str.match(/^```.+/) != nil ;end
     def codeclose?;@scope == :code && @str == '```' ;end
-    def hint?     ;@str[0] == '|' ;end
     def blank?    ;@str == '' ;end
     def html?     ;@str[0] == '<' && @str[-1] == '>' ;end
-    def gonext?   ;@str[0] == '-' && @str[1] == '>'  ;end
-    def goback?   ;@str[0] == '<' && @str[1] == '-'  ;end
     def template? ;@str[0] == '[' && @str[-1] == ']' ;end
 
     def to_s
       to_s_method = @line_type.to_s + '_to_s'
-      self.send(to_s_method)
+      send(to_s_method)
     end
   end #class
+
+  class CustomLine < Line
+    
+    def line_types
+      [ :hint, :gonext, :goback ]
+    end
+
+    def hint?   ;@str[0] == '|' ;end
+    def gonext? ;@str[0] == '-' && @str[1] == '>'  ;end
+    def goback? ;@str[0] == '<' && @str[1] == '-'  ;end
+
+    def hint_to_s
+      str = @str.sub(/^\|/, '').strip
+      return '<p class="hint">' + str + '</p>'
+    end
+
+    def gonext_to_s
+      Util.go_link(@str, 'next')
+    end
+
+    def goback_to_s
+      Util.go_link(@str, 'back')
+    end
+  end#class
 
   class Util
 
@@ -124,7 +158,7 @@ module MiniMark
       @out = []
       scope = nil
       lines.each do |l|
-        line = Line.new(l, scope)
+        line = CustomLine.new(l, scope)
         @out << line 
         if line.line_type == :codeopen
           scope = :code
