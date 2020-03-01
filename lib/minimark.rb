@@ -1,7 +1,12 @@
+require_relative './renderable'
+
 module MiniMark
-  
+
   class Line
 
+    include Renderable
+      # section_to_s, code_to_s, codeopen_to_s, codeclose_to_s, hint_to_s, html_to_s
+      # gonext_to_s, goback_to_s, template_to_s, blank_to_s, paragraph_to_s
     attr :line_type
 
     def initialize(str, scope=nil)
@@ -13,7 +18,7 @@ module MiniMark
         @str = str.strip 
       end
 
-      if(section?)     ;@line_type = :section
+         if(section?)  ;@line_type = :section
       elsif(code?)     ;@line_type = :code
       elsif(codeopen?) ;@line_type = :codeopen
       elsif(codeclose?);@line_type = :codeclose
@@ -39,58 +44,9 @@ module MiniMark
     def template? ;@str[0] == '[' && @str[-1] == ']' ;end
 
     def to_s
-
-      if(:section == @line_type)
-        str = @str.sub(/^##/, '').strip
-        return '<h2>' + str + '</h2>'
-
-      elsif(:code == @line_type)
-        return Util.replace_brackets(@str, /___/, 'light')
-
-      elsif(:codeopen == @line_type)
-        lang = @str.sub('```','').strip
-        if(lang=='cmd')
-          return '<pre class="cmd">'
-        else
-          return '<pre class="prettyprint lang-'+lang+'">'
-        end
-
-      elsif(:codeclose == @line_type)
-        return '</pre>'
-
-      elsif(:hint == @line_type)
-        str = @str.sub(/^\|/, '').strip
-        return '<p class="hint">' + str + '</p>'
-
-      elsif(:html == @line_type)
-        return @str
-
-      elsif(:gonext == @line_type)
-        return Util.go_link(@str, 'next')
-
-      elsif(:goback == @line_type)
-        return Util.go_link(@str, 'back')
-
-      elsif(:template == @line_type)
-        template_spec = @str.gsub(/^\[|\]$/, '').strip.split('|', 2)
-        template_path = template_spec[0].strip
-        data_str = template_spec[1] # for eval
-        if(template_spec.size >= 2)
-          return Util.render_template(template_path, data_str)
-        else
-          return File.read(template_path)
-        end
-
-      elsif(:blank == @line_type)
-        return ""
-
-      else # :paragraph
-        str = Util.replace_brackets(@str, /`/, 'mono')
-        str = str.sub(/^\^\s/, '&uarr; ')
-        str = str.sub(/^v\s/, '&darr; ')
-        return '<p>' + str + '</p>'
-      end
-    end#def
+      to_s_method = @line_type.to_s + '_to_s'
+      self.send(to_s_method)
+    end
   end #class
 
   class Util
