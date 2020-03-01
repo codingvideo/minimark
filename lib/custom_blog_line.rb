@@ -12,7 +12,7 @@ module MiniMark
     def hint?   ;@str[0] == '|' ;end
     def gonext? ;@str[0] == '-' && @str[1] == '>'  ;end
     def goback? ;@str[0] == '<' && @str[1] == '-'  ;end
-    def section?;@str[0] == "#"   && @str[1]=="#" && @str[2]!="#" ;end
+    def section?;@str[0] == "#" && @str[1]=="#" && @str[2]!="#" ;end
     def litcode?;@scope == :code && @str != '```' && @str.scan('___').size > 1 ;end
 
     def hint_to_s
@@ -21,11 +21,11 @@ module MiniMark
     end
 
     def gonext_to_s
-      MiniMark::Util.go_link(@str, 'next')
+      Util.go_link(@str, 'next')
     end
 
     def goback_to_s
-      MiniMark::Util.go_link(@str, 'back')
+      Util.go_link(@str, 'back')
     end
 
     def section_to_s
@@ -34,7 +34,7 @@ module MiniMark
     end
 
     def litcode_to_s
-      return MiniMark::Util.replace_brackets(@str, /___/, 'light')
+      Util.replace_brackets(@str, /___/, 'light')
     end
   end#class
 end#module

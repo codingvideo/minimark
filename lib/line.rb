@@ -12,7 +12,7 @@ module MiniMark
     def initialize(str, scope=nil)
       @scope = scope
 
-      if(@scope == :code && MiniMark::Util.not_code_scope_close?(str))
+      if(@scope == :code && Util.not_code_scope_close?(str))
         @str = str.rstrip # rstrip only, retain left space
       else
         @str = str.strip 
