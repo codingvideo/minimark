@@ -13,7 +13,7 @@ module MiniMark
       if(lang=='cmd')
         return '<pre class="cmd">'
       else
-        return '<pre class="prettyprint lang-'+lang+'">'
+        return '<pre class="'+syntax_highlighter_class(lang)+'">'
       end
     end
 
@@ -45,6 +45,11 @@ module MiniMark
       str = str.sub(/^\^\s/, '&uarr; ')
       str = str.sub(/^v\s/, '&darr; ')
       return '<p>' + str + '</p>'
+    end
+
+    # default
+    def syntax_highlight_class(lang)
+      'code '+lang
     end
   end#module
 end#module
