@@ -2,11 +2,6 @@ module MiniMark
 
   module Renderable
 
-    def section_to_s
-      str = @str.sub(/^##/, '').strip
-      return '<h2>' + str + '</h2>'
-    end
-
     def code_to_s
       return Util.replace_brackets(@str, /___/, 'light')
     end
