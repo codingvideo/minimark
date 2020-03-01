@@ -5,7 +5,7 @@ module MiniMark
   module Renderable
 
     def code_to_s
-      return MiniMark::Util.replace_brackets(@str, /___/, 'light')
+      return @str
     end
 
     def codeopen_to_s

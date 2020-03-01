@@ -6,8 +6,7 @@ module MiniMark
   class Line
 
     include Renderable
-      # section_to_s, code_to_s, codeopen_to_s, codeclose_to_s, hint_to_s, html_to_s
-      # gonext_to_s, goback_to_s, template_to_s, blank_to_s, paragraph_to_s
+    
     attr :line_type
 
     def initialize(str, scope=nil)

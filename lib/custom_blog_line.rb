@@ -6,13 +6,14 @@ module MiniMark
   class CustomBlogLine < MiniMark::Line
     
     def line_types
-      [ :hint, :gonext, :goback, :section ]
+      [ :hint, :gonext, :goback, :section, :litcode ]
     end
 
     def hint?   ;@str[0] == '|' ;end
     def gonext? ;@str[0] == '-' && @str[1] == '>'  ;end
     def goback? ;@str[0] == '<' && @str[1] == '-'  ;end
-    def section?;@str[0]=="#" && @str[1]=="#" && @str[2]!="#" ;end
+    def section?;@str[0] == "#"   && @str[1]=="#" && @str[2]!="#" ;end
+    def litcode?;@scope == :code && @str != '```' && @str.scan('___').size > 1 ;end
 
     def hint_to_s
       str = @str.sub(/^\|/, '').strip
@@ -30,6 +31,10 @@ module MiniMark
     def section_to_s
       str = @str.sub(/^##/, '').strip
       return '<h2>' + str + '</h2>'
+    end
+
+    def litcode_to_s
+      return MiniMark::Util.replace_brackets(@str, /___/, 'light')
     end
   end#class
 end#module
