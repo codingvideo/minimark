@@ -4,6 +4,20 @@ module MiniMark
 
   module Renderable
 
+    def listitem_to_s
+      str = @str.sub(/^\-\s/, '')
+      str = Util.replace_brackets(str, /`/, 'mono')
+      return "<li>" + str + "</li>"
+    end
+
+    def listopen_to_s
+      return '<ul>' + listitem_to_s # first item as open
+    end
+
+    def listclose_to_s
+      return '</ul>'
+    end
+
     def code_to_s
       return @str
     end

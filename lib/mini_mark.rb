@@ -27,6 +27,12 @@ module MiniMark
           scope = :code
         elsif line.line_type == :codeclose
           scope = nil
+        elsif line.line_type == :listopen
+          scope = :list
+        elsif line.line_type == :listitem
+          scope = :list
+        elsif line.line_type == :listclose
+          scope = nil
         end
       end
       file.close

@@ -10,7 +10,7 @@ module MiniMark
     attr :line_type
 
     def initialize(str, scope=nil)
-      @scope = scope
+      @scope = scope # :code | :list
 
       if(@scope == :code && Util.not_code_scope_close?(str))
         @str = str.rstrip # rstrip only, retain left space
@@ -21,6 +21,9 @@ module MiniMark
       custom_type = custom?
 
       if(custom_type)  ;@line_type = custom_type
+      elsif(listitem?) ;@line_type = :listitem
+      elsif(listopen?) ;@line_type = :listopen
+      elsif(listclose?);@line_type = :listclose
       elsif(code?)     ;@line_type = :code
       elsif(codeopen?) ;@line_type = :codeopen
       elsif(codeclose?);@line_type = :codeclose
@@ -29,7 +32,7 @@ module MiniMark
       elsif(template?) ;@line_type = :template
       else             ;@line_type = :paragraph
       end
-    end
+    end#def
 
     def custom?
       if defined?(line_types) != nil
@@ -44,8 +47,11 @@ module MiniMark
       end
     end
 
+    def listitem? ;@scope == :list && @str != '' ;end
+    def listopen? ;@str.match(/^\-\s/) != nil && @scope == nil ;end
+    def listclose?;@scope == :list && @str.match(/^\-\s/) == nil ;end
     def code?     ;@scope == :code && @str != '```' ;end
-    def codeopen? ;@str.match(/^```.+/) != nil ;end
+    def codeopen? ;@str.match(/^```.+/) != nil && @scope == nil ;end
     def codeclose?;@scope == :code && @str == '```' ;end
     def blank?    ;@str == '' ;end
     def html?     ;@str[0] == '<' && @str[-1] == '>' ;end
