@@ -21,17 +21,12 @@ module MiniMark
       lines.each do |l|
         line = @_Line.new(l, scope)
         @out << line 
-        if line.line_type == :codeopen
+        _type = line.line_type
+        if _type == :codeopen || _type == :code
           scope = :code
-        elsif line.line_type == :code
-          scope = :code
-        elsif line.line_type == :codeclose
-          scope = nil
-        elsif line.line_type == :listopen
+        elsif _type == :listopen || _type == :listitem
           scope = :list
-        elsif line.line_type == :listitem
-          scope = :list
-        elsif line.line_type == :listclose
+        else
           scope = nil
         end
       end
