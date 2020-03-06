@@ -1,5 +1,3 @@
-require_relative './custom_blog_line'
-
 module MiniMark
 
   class Parser
