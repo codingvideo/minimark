@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.date = %q{2020-02-28}
   s.summary = %q{minimal markdown parser}
   s.files = [
-    "lib/minimark.rb"
+    "lib/mini_mark.rb"
   ]
   s.require_paths = ["lib"]
 end
