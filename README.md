@@ -22,6 +22,8 @@ $ rm -rf minimark
 `MiniMark::Parser` is the main front-facing class. The constructor takes the address to your markdown file, and you can use the `parse` method to compile and get back the resulting HTML.
 
 ```rb
+require 'mini_mark/parser'
+
 parser = MiniMark::Parser.new('hello.md')
 html = parser.parse
 File.write('hello.html', html)
@@ -43,6 +45,17 @@ The `CustomBlogLine` that comes with the gem is a subclass of `Line` that gets e
 - Go-Next Button
 - Code Embed that can highlight certain parts of the code
 - Section Heading
+
+You can import the `CustomBlogLine` class from `mini_mark/custom_blog_line`:
+
+```rb
+require 'mini_mark/parser'
+require 'mini_mark/custom_blog_line'
+
+parser = MiniMark::Parser.new('hello.md', MiniMark::CustomBlogLine)
+html = parser.parse
+File.write('hello.html', html)
+```
 
 Check out the demo for the exact syntax and HTML output for each line type.
 
