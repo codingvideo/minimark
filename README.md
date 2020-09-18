@@ -9,7 +9,7 @@ $ git clone https://github.com/codingvideo/minimark.git
 
 2. Install the gem:
 ```bash
-$ gem install minimark/minimark-0.0.1.gem
+$ gem install minimark/mini_mark-0.0.1.gem
 ```
 
 3. Remove the project:
