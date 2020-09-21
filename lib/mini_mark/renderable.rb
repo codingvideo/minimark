@@ -19,7 +19,7 @@ module MiniMark
     end
 
     def code_to_s
-      return @str
+      return @str.gsub('<', '&lt;').gsub('>', '&gt;')
     end
 
     def codeopen_to_s
