@@ -34,6 +34,7 @@ module MiniMark
 
     # override
     def code_to_s
+      @str = super
       Util.replace_brackets(@str, /___/, 'light')
     end
 
